@@ -4,12 +4,16 @@
   "description": "��#\u0000 \u0000p\u0000a\u0000r\u0000t\u00003\u0000-\u0000f\u0000u\u0000l\u0000l\u0000-\u0000s\u0000t\u0000a\u0000c\u0000k\u0000-\u0000o\u0000p\u0000e\u0000n\u0000\r\u0000 \u0000",
   "main": "index.js",
   "scripts": {
-    "start": "node phone_book.js",
+    "start": "node",
+    "dev": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.21.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
   }
 }
