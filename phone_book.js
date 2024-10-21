@@ -62,6 +62,8 @@ app.delete('/api/persons/:id', (request,response) => {
 })
 
 app.use(express.json())
+morgan.token('body', (req, res) => JSON.stringify(req.body));
+app.use(morgan(':method :url :status :response-time ms - :res[content-length] :body'));
 
 // POST requests
 app.post('/api/persons', (request,response) => {
