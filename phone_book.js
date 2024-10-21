@@ -50,13 +50,26 @@ app.get('/info', (request,response) => {
 })
 
 // DELETE requests
-
 app.delete('/api/persons/:id', (request,response) => {
   response.send('delete req called')
   persons = persons.filter(person => person.id!==request.params.id)
   response.status(204).end()
 })
 
+app.use(express.json())
+
+// POST requests
+app.post('/api/persons', (request,response) => {
+  const randomId = Math.floor(Math.random() * 1000000000000)
+
+  get_user = persons.find(({id}) => id === randomId)
+  if (!get_user){
+    const person = request.body
+    person.id = String(randomId)
+    persons = persons.concat(person)
+    response.json(person)
+  }
+})
 
 const PORT = 3001
 app.listen(PORT, () => {
