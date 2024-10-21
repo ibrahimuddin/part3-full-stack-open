@@ -61,15 +61,27 @@ app.use(express.json())
 // POST requests
 app.post('/api/persons', (request,response) => {
   const randomId = Math.floor(Math.random() * 1000000000000)
-
-  get_user = persons.find(({id}) => id === randomId)
-  if (!get_user){
-    const person = request.body
-    person.id = String(randomId)
-    persons = persons.concat(person)
-    response.json(person)
+  const person = request.body
+  get_user = persons.find(({name}) => name === person.name)
+  if(get_user){
+    response.status(400).send("name already exists!")
+  }
+  else{
+    get_user = persons.find(({number})=> number === person.number)
+    if(get_user){
+      response.status(400).send("number already exists!")
+    }
+    else{
+      get_user = persons.find(({id}) => id === randomId)
+      if (!get_user){
+        person.id = String(randomId)
+        persons = persons.concat(person)
+        response.json(person)
+      }
+    }
   }
 })
+
 
 const PORT = 3001
 app.listen(PORT, () => {
