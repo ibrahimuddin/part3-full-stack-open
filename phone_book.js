@@ -29,21 +29,32 @@ let persons = [
     }
 ]
 
+// GET requests
 app.get('/api/persons', (request,response) => {
     response.json(persons)
 })
 
-
 app.get('/api/persons/:id', (request,response) => {
   get_user = persons.find(({id}) => id === request.params.id)
-  console.log(get_user)
-  response.json(get_user)
+  if(get_user){
+    response.json(get_user)
+  }else{
+    response.status(404).send("User not found")
+  }  
 })
 
 app.get('/info', (request,response) => {
     date_request = new Date(Date.now()).toString()
     response.send(`<h3>Phonebook has info for ${persons.length} people</h3>
                     <h4>${date_request}</h4>`)
+})
+
+// DELETE requests
+
+app.delete('/api/persons/:id', (request,response) => {
+  response.send('delete req called')
+  persons = persons.filter(person => person.id!==request.params.id)
+  response.status(204).end()
 })
 
 
