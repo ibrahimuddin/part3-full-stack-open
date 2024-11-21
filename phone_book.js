@@ -30,7 +30,6 @@ let persons = [
     }
 ]
 
-app.use(morgan('tiny'))
 
 
 
