@@ -43,12 +43,16 @@ app.get('/api/persons', (request,response) => {
       response.json(persons)
   )
 })
-
-app.get('/api/persons/:id', (request, response) => {
-  console.log(request.params.id)
-  PhoneBook.findById(request.params.id).then(person =>
-    response.json(person)
-  )
+// next is for the error handler to handle the error
+app.get('/api/persons/:id', (request, response, next) => {
+  PhoneBook.findById(request.params.id).then(person => {
+    if (person) {
+      response.json(person)
+    } else {
+      response.status(404).end()
+    }
+  })
+  .catch(error => next(error))
 })
 
 app.get('/info', (request,response) => {
@@ -62,9 +66,10 @@ app.get('/info', (request,response) => {
 
 // DELETE requests
 app.delete('/api/persons/:id', (request,response) => {
-  response.send('delete req called')
-  persons = persons.filter(person => person.id!==request.params.id)
-  response.status(204).end()
+  PhoneBook.findByIdAndDelete(request.params.id).then(person => {
+    response.status(204).end()
+  })
+  .catch(error => next(error))
 })
 
 app.use(express.json())
@@ -89,6 +94,17 @@ app.post('/api/persons', (request,response) => {
     response.json(savedPerson)
   })
 })
+
+// middleware for handling errors. 
+const errorHandler = (error, request, response, next) => {
+  console.log(error.message)
+  if (error.name === 'CastError') {
+    return response.status(400).send({error : 'malformatted id'})
+  }
+  next(error)
+}
+
+app.use(errorHandler)
 
 
 app.listen(PORT, () => {
