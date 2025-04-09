@@ -10,40 +10,12 @@ const PORT = process.env.PORT || 3001
 
 const PhoneBook = require('./models/phone_book')
 
-let persons = [
-    { 
-      "id": "1",
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": "2",
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": "3",
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": "4",
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    },
-    {
-      "id" :"5",
-      "name": "incorrect user",
-      "number": "12-12-22111"
-    }
-]
-// GET requests
 app.get('/api/persons', (request,response) => {
   PhoneBook.find({}).then(persons =>
       response.json(persons)
   )
 })
-// next is for the error handler to handle the error
+
 app.get('/api/persons/:id', (request, response, next) => {
   PhoneBook.findById(request.params.id).then(person => {
     if (person) {
@@ -64,8 +36,7 @@ app.get('/info', (request,response) => {
   })
 })
 
-// DELETE requests
-app.delete('/api/persons/:id', (request,response) => {
+app.delete('/api/persons/:id', (request, response) => {
   PhoneBook.findByIdAndDelete(request.params.id).then(person => {
     response.status(204).end()
   })
@@ -76,7 +47,6 @@ app.use(express.json())
 morgan.token('body', (req, res) => JSON.stringify(req.body));
 app.use(morgan(':method :url :status :response-time ms - :res[content-length] :body'));
 
-// POST requests
 app.post('/api/persons', (request,response) => {
   const body = request.body
 
@@ -103,7 +73,6 @@ const errorHandler = (error, request, response, next) => {
   }
   next(error)
 }
-
 app.use(errorHandler)
 
 
