@@ -47,23 +47,51 @@ app.use(express.json())
 morgan.token('body', (req, res) => JSON.stringify(req.body));
 app.use(morgan(':method :url :status :response-time ms - :res[content-length] :body'));
 
-app.post('/api/persons', (request,response) => {
-  const body = request.body
+// app.post('/api/persons', (request,response) => {
+//   const body = request.body
+  
+//   // check if phonebook entry exists
+//   PhoneBook.findOne({ name: body.name }).then(person => {
+//     console.log(person)
+//     if (person) {
+//       PhoneBook.findByIdAndUpdate(person.id, {name : body.name, number : body.number}, {new: true})
+//       .then(updatedPerson => {
+//         return response.json(updatedPerson)
+//       })
+//     }
+    // const newPerson = new PhoneBook({
+    //   name: body.name,
+    //   number: body.number
+    // })
+    // newPerson.save().then(savedPerson => {
+    //   return response.json(savedPerson)
+    // })
+//   })
+  
+// })
 
-  // PhoneBook.find({ 'name': body.name }).then(person =>
-  //   response.status(400).send("name already exists")
-  // )
-  // PhoneBook.find({ 'number': body.number }).then(person =>
-  //   response.status(400).send("number already exists")
-  // )
-  const person = new PhoneBook({
-    name: body.name,
-    number: body.number
+app.post(`/api/persons`, (request, response) => {
+  const { name, number } = request.body
+  PhoneBook.findOneAndUpdate(
+      { "name": name },
+      { $set: { "name": name, "number": number } },
+      { new : true}
+  )
+    .then(updatedPerson => {
+      if (updatedPerson) {
+        return response.json(updatedPerson)
+      }
+      else {
+        const newPerson = new PhoneBook({
+          name: name,
+          number: number
+        })
+        newPerson.save().then(savedPerson => {
+          return response.json(savedPerson)
+        })
+      }
+    })
   })
-  person.save().then(savedPerson => {
-    response.json(savedPerson)
-  })
-})
 
 // middleware for handling errors. 
 const errorHandler = (error, request, response, next) => {
