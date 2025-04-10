@@ -47,29 +47,6 @@ app.use(express.json())
 morgan.token('body', (req, res) => JSON.stringify(req.body));
 app.use(morgan(':method :url :status :response-time ms - :res[content-length] :body'));
 
-// app.post('/api/persons', (request,response) => {
-//   const body = request.body
-  
-//   // check if phonebook entry exists
-//   PhoneBook.findOne({ name: body.name }).then(person => {
-//     console.log(person)
-//     if (person) {
-//       PhoneBook.findByIdAndUpdate(person.id, {name : body.name, number : body.number}, {new: true})
-//       .then(updatedPerson => {
-//         return response.json(updatedPerson)
-//       })
-//     }
-    // const newPerson = new PhoneBook({
-    //   name: body.name,
-    //   number: body.number
-    // })
-    // newPerson.save().then(savedPerson => {
-    //   return response.json(savedPerson)
-    // })
-//   })
-  
-// })
-
 app.post(`/api/persons`, (request, response) => {
   const { name, number } = request.body
   PhoneBook.findOneAndUpdate(
