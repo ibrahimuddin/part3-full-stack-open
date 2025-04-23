@@ -12,7 +12,11 @@ mongoose.set('strictQuery',false)
 mongoose.connect(url)
 
 const phoneBookSchema = new mongoose.Schema({
-    name: String,
+  name: {
+    type: String,
+    minLength: 3,
+    required: true
+    },
     number: String
 })
 
@@ -39,7 +43,6 @@ const phoneBookSchema = new mongoose.Schema({
 
 phoneBookSchema.set('toJSON', {
     transform: (document, returnedObject) => {
-      console.log("hello")
       returnedObject.id = returnedObject._id.toString()
       delete returnedObject._id
       delete returnedObject.__v

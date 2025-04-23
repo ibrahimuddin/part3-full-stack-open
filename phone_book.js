@@ -47,7 +47,7 @@ app.use(express.json())
 morgan.token('body', (req, res) => JSON.stringify(req.body));
 app.use(morgan(':method :url :status :response-time ms - :res[content-length] :body'));
 
-app.post(`/api/persons`, (request, response) => {
+app.post(`/api/persons`, (request, response,next) => {
   const { name, number } = request.body
   PhoneBook.findOneAndUpdate(
       { "name": name },
@@ -64,8 +64,9 @@ app.post(`/api/persons`, (request, response) => {
           number: number
         })
         newPerson.save().then(savedPerson => {
-          return response.json(savedPerson)
+          return  response.json(savedPerson)
         })
+        .catch(error => next(error))
       }
     })
   })
@@ -74,7 +75,9 @@ app.post(`/api/persons`, (request, response) => {
 const errorHandler = (error, request, response, next) => {
   console.log(error.message)
   if (error.name === 'CastError') {
-    return response.status(400).send({error : 'malformatted id'})
+    return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name == "ValidationError") {
+    return response.status(400).json({ error: error.message })
   }
   next(error)
 }
