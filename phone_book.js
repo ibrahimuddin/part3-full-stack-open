@@ -12,7 +12,7 @@ const PhoneBook = require('./models/phone_book')
 
 app.get('/api/persons', (request,response) => {
   PhoneBook.find({}).then(persons =>
-      response.json(persons)
+    response.json(persons)
   )
 })
 
@@ -24,28 +24,28 @@ app.get('/api/persons/:id', (request, response, next) => {
       response.status(404).end()
     }
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.get('/info', (request,response) => {
-  date_request = new Date(Date.now()).toString()
+  let date_request = new Date(Date.now()).toString()
   PhoneBook.countDocuments({})
     .then(count => {
-    response.send(`<h3<h3>Phonebook has info for ${count} people</h3>
+      response.send(`<h3<h3>Phonebook has info for ${count} people</h3>
                     <h4>${date_request}</h4>`)
-  })
+    })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
   PhoneBook.findByIdAndDelete(request.params.id).then(person => {
     response.status(204).end()
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.use(express.json())
-morgan.token('body', (req, res) => JSON.stringify(req.body));
-app.use(morgan(':method :url :status :response-time ms - :res[content-length] :body'));
+morgan.token('body', (req, res) => JSON.stringify(req.body))
+app.use(morgan(':method :url :status :response-time ms - :res[content-length] :body'))
 
 app.post(`/api/persons`, (request, response,next) => {
   const { name, number } = request.body
